@@ -25,10 +25,12 @@ free, etc) apart from undefined behaviors. If this happens, your project will be
 considered non functional and you will receive a 0 during the evaluation.
   : 함수들의 경우 알수없는 에러로 인해 종료되면 안된다.
 
+
 • Your Makefile must at least contain the rules $(NAME), all, clean, fclean and
 re. And must recompile/relink only necessary files.
   : Makefile 은 $(NAME), all, clean, fclean, re 기능을 가져야하며
   : 필요한 파일들만 recomplie/relink 해야한다.
+
 
 • To turn in bonuses to your project, you must include a rule bonus to your Makefile,
 which will add all the various headers, librairies or functions that are forbidden on
@@ -38,6 +40,7 @@ Mandatory and bonus part evaluation is done separately.
   : bonus ㅁ여령어는 헤더, 라이브러리, 함수들을 추가한다. _bonus 라고 파일명에 붙여줄 것
   : Mandatory, bonus 는 분리해서 평가할 것
   
+  
 • We encourage you to create test programs for your project even though this work
 won’t have to be submitted and won’t be graded. It will give you a chance
 to easily test your work and your peers’ work. You will find those tests especially
@@ -45,11 +48,13 @@ useful during your defence. Indeed, during defence, you are free to use your tes
 and/or the tests of the peer you are evaluating.
   : 테스트 프로그램을 생성해서 평가해보기
 
+
 • Submit your work to your assigned git repository. Only the work in the git repository will be graded. If Deepthought is assigned to grade your work, it will be done
 after your peer-evaluations. If an error happens in any section of your work during
 Deepthought’s grading, the evaluation will stop.
   : 할당된 깃 저장소에 제출
   : 깃 저장소의 내용들만 평가받는다.
+
 
 • You must write 64 bits ASM. Beware of the "calling convention"
   : 64 비트 ASM 을 작성?
@@ -71,16 +76,50 @@ Deepthought’s grading, the evaluation will stop.
 # Mandatory part
 ```
 • The library must be called libasm.a.
+  : 라이브러리 이름은 libasm.a
+  
 • You must submit a main that will test your functions and that will compile with
 your library to show that it’s functional.
+  : 함수를 테스트하고 제작한 라이브러리를 함께 컴파일하는 main 을 생성할 것
+  
 • You must rewrite the following functions in asm:
-◦ ft_strlen (man 3 strlen)
-◦ ft_strcpy (man 3 strcpy)
-◦ ft_strcmp (man 3 strcmp)
-◦ ft_write (man 2 write)
-◦ ft_read (man 2 read)
-◦ ft_strdup (man 3 strdup, you can call to malloc)
+    ◦ ft_strlen (man 3 strlen)
+    ◦ ft_strcpy (man 3 strcpy)
+    ◦ ft_strcmp (man 3 strcmp)
+    ◦ ft_write (man 2 write)
+    ◦ ft_read (man 2 read)
+    ◦ ft_strdup (man 3 strdup, you can call to malloc)
+  : 해당 함수들을 어셈블리로 다시 제작할 것
+  
 • You must check for errors during syscalls and properly set them when needed
+  : syscall 을 실행할 동안 에러를 확인학 적절한 기능을 넣어주기
+  
 • Your code must set the variable errno properly.
+  : errno 벼누를 적절하게 넣어주기
+  
 • For that, you are allowed to call the extern ___error.
+  : ___error 외부 변수? 사용가능
+```
+
+
+# Bonus part
+
+```
+You can rewrite these functions in asm. The linked list function will use the following
+structure:
+
+   typedef struct s_list
+   {
+      void *data;
+      struct s_list *next;
+   } t_list;
+
+  : 아래 함수들을 어셈블리로 만들 것
+  : linked list 함수의 경우 위 구조체를 사용
+
+• ft_atoi_base (like the one in the piscine)
+• ft_list_push_front (like the one in the piscine)
+• ft_list_size (like the one in the piscine)
+• ft_list_sort (like the one in the piscine)
+• ft_list_remove_if (like the one in the piscine)
 ```
