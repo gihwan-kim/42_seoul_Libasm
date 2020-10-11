@@ -9,9 +9,9 @@ compare     :
                 jne     ok                   ; if str[i] != 0
                 je      end                  ; if str[i] == 0x0, calcuating str length is fnished
 
-end         :   
-                ret
-
 ok          :   
                 inc     rax                  ; i++
                 jmp     compare              ; back to the compare
+
+end         :   
+                ret

@@ -1,33 +1,39 @@
 NAME = libasm.a
 
-NA = nasm
+# NASM = nasm
+AS = nasm
 ASM_SRC = \
-			ft_strlen.s
-ASM_DIR = ./srcs
-ASM_LIST = $(addprefix $(ASM_DIR)/, $(ASM_SRC))
-NA_FLAG = -f macho64
+			ft_strlen.s \
+			ft_strcpy.s
+ASM_DIR = ./srcs/
+ASM_LIST = $(addprefix $(ASM_DIR), $(ASM_SRC))
+# NA_FLAG = -f macho64
+ASFLAGS = -f macho64
 
 # macro 치환 : 이미 지정한 매크로 ASM_SRC 에서 .s 를 .o 로 바꾸어 OBJS 로 지정
-OJBS = $(ASM_LIST:%.s=%.o)
+OBJS_LIST = $(ASM_LIST:%.s=%.o)
 
-LIBASM_TEST = libasm_test
+LIBASM_TEST = test
+LIB = -lasm -L./
+INC = -I ./includes
 
+.SUFFIXES : .s .o
 
-.o :
-	$(NA) $(NA_FLAG) $(ASM_LIST)
+## libasm.a 생성
+# .s -> .o -> libasm.a
+$(NAME) : $(OBJS_LIST)
+	ar rc $(NAME) $(OBJS_LIST)
 
-$(NAME) : $(OBJS)
-	cat $(ASM_LIST)
-	ar rc $(NAME) $(OBJS)
-
-$(LIBASM_TEST) :
-	gcc -L./includes/
+## test 파일 생성
+# gcc -o : output file 이름 결정
+$(LIBASM_TEST) : ./srcs/main.c
+	gcc $(LIB) ./srcs/main.c $(INC) -o $(LIBASM_TEST)
 
 all : $(NAME)
 
 fclean : clean all
 
 clean : 
-	rm -f ./srcs/*.o $(NAME)
+	rm -f ./srcs/*.o $(NAME) a.out $(LIBASM_TEST) 
 
 re : fclean all
