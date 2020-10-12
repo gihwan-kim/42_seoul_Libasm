@@ -1,7 +1,7 @@
 # 42_seoul_Libasm
 This project is about assembly language
 
-
+- [과제 관련 공부한 내용들](https://github.com/gihwan-kim/42_seoul_Libasm/wiki)
 # Introduction
 ```
 An assembly (or assembler) language, often abbreviated asm, is a low-level programming

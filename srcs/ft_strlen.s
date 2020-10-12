@@ -2,10 +2,10 @@
 
                 section .text                ; code 
 _ft_strlen  :   
-                mov     rax, 0x0                ; i = 0
+                mov     rax, 0x0             ; i = 0
 
 compare     :   
-                cmp     BYTE[rdi + rax], 0x0  ; rdi == str argument
+                cmp     BYTE[rdi + rax], 0x0 ; rdi == str argument
                 jne     ok                   ; if str[i] != 0
                 je      end                  ; if str[i] == 0x0, calcuating str length is fnished
 

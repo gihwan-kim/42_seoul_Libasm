@@ -14,7 +14,7 @@ check       :
                 je      end                         ; src[i] == 0
 
 change      :
-                mov     rcx, [rsi + rdx]
+                mov     rcx, [rsi + rdx]            ; tmp = src[i]
                 mov     [rdi + rdx], rcx            ; dst[i] = src[i]
                 inc     rdx                         ; i++
 
