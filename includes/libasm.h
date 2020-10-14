@@ -6,7 +6,7 @@
 /*   By: gihkim <kgh06079@naver.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/10 16:49:26 by gihkim            #+#    #+#             */
-/*   Updated: 2020/10/12 16:11:45 by gihkim           ###   ########.fr       */
+/*   Updated: 2020/10/14 16:24:27 by gihkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #define no1 "1️⃣"
 #define no2 "2️⃣"
 #define no3 "3️⃣"
@@ -40,5 +41,7 @@
 size_t	ft_strlen(char *str);
 char	*ft_strcpy(char *dst, char *src);
 int     ft_strcmp(char *s1, char *s2);
+char    *ft_strdup(const char *str);
+ssize_t ft_write(int fd, const void *buf, size_t count);
 
 #endif

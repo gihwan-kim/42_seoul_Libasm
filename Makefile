@@ -5,7 +5,9 @@ AS = nasm
 ASM_SRC = \
 			ft_strlen.s \
 			ft_strcpy.s \
-			ft_strcmp.s
+			ft_strcmp.s \
+			ft_strdup.s \
+			ft_write.s
 ASM_DIR = ./srcs/
 ASM_LIST = $(addprefix $(ASM_DIR), $(ASM_SRC))
 # NA_FLAG = -f macho64
