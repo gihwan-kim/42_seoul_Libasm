@@ -13,10 +13,10 @@ _ft_strcmp  :
 
 while_loop  :
                 mov     rcx, [rsi + rdx]
-                cmp     [rdi + rdx], rcx    ; s1[i] - s2[i]
-                jl      s1_is_bigger        ; if s1[i] > s2[i] 
-                jg      s1_is_lower         ; if s1[i] < s2[i] 
-                je      s1_s2_same          ; if s1[i] = s2[i] 
+                cmp     [rdi + rdx], rcx            ; s1[i] - s2[i]
+                jl      s1_is_bigger                ; if s1[i] > s2[i] 
+                jg      s1_is_lower                 ; if s1[i] < s2[i] 
+                je      s1_s2_same                  ; if s1[i] = s2[i] 
 
 s1_is_bigger:   
                 mov     rax, 0x1                    ; return 1
@@ -30,7 +30,7 @@ s1_s2_same  :
 				inc     rdx                         ; i++
                 cmp     BYTE [rdi + rdx], 0x0       ; s1[i] == 0 ?
                 je      loop_end
-                cmp     BYTE [rsi + rdx], 0x0            ; s2[i] == 0 ?
+                cmp     BYTE [rsi + rdx], 0x0       ; s2[i] == 0 ?
                 je      loop_end
                 jne     while_loop
 

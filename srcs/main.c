@@ -8,7 +8,7 @@
 // ✅ 
 // ❌ 
 // 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 
-// 7️⃣ 8️⃣ 9️⃣ 🔟
+// 7️⃣ 8️⃣ 9️⃣ 🔟🔢
 
 void test_ft_strlen(char *str, char *number)
 {
@@ -98,28 +98,116 @@ void test_ft_strdup(char *str, char *number)
 		printf("❌ ]\n\n");
 }
 
-void test_ft_write(int fd, const void *buf, char *number)
+void test_ft_write_util(int fd, char *str)
 {
-	size_t _write;
-	size_t _ft_write;
+	if (fd == 1)
+		write(1, str, strlen(str));
+}
 
-	_write = write(fd, buf, strlen(buf));
-	_ft_write = ft_write(fd, buf, strlen(buf));
+void test_ft_write(int fd, const void *buf, unsigned int count, char *number)
+{
+	ssize_t _write;
+	ssize_t _ft_write;
+	int		_write_errno;
+	int		_ft_write_errno;
+	const void *tmp_buf;
 
-	printf("\n\t%s--- test %s  ---\n", C_NRML , number);
-	printf("\t%s[test string] : %s|%s|\n ", C_PRPL , C_YLLW , buf);
-	printf("\t%swrite    :     %s|%zu|", C_AQUA , C_YLLW , _write);
-	printf("%s\n\tft_write :     %s|%zu|\n\t", C_AQUA, C_YLLW , _ft_write);
+	if (buf)
+		tmp_buf = buf;
+	else
+		tmp_buf = "NULL";
+
+	printf("\n\t%s--- test %s  ---\n%s", C_NRML , number, C_NRML);
+	printf("\t%s[test string] : %s|%s|\n%s ", C_PRPL , C_YLLW , tmp_buf, C_NRML);
+	printf("\t%s[count value] : %s|%u|\n%s ", C_PRPL , C_YLLW , count, C_NRML);
+	printf("\t%s[fd    value] : %s|%d|\n%s ", C_PRPL , C_YLLW , fd, C_NRML);
+
+	test_ft_write_util(fd, "\twrite         : |");
+	_write = write(fd, buf, count);
+	_write_errno = errno;
+
+	// 다른지 같은지 확인하기위해 기준값넣어줬음
+	// errno = 10000;
+
+	test_ft_write_util(fd, "|\n\tft_write      : |");
+	_ft_write = ft_write(fd, buf, count);
+	_ft_write_errno = errno;
+
+	test_ft_write_util(fd, "|\n");
+	
+	printf("\t%swrite      ret: %s|%zd|", C_AQUA , C_YLLW , _write);
+	printf("%s\n\tft_write   ret: %s|%zd|", C_AQUA, C_YLLW , _ft_write);
+	printf("\n\t%swrite    errno: |%d|", C_NRML , _write_errno);
+	printf("\n\tft_write errno: |%d|\n", _ft_write_errno);
 	printf("%s\n\tresult:\t\t%s[", C_GREN, C_YLLW);
 
 	if (_write == _ft_write)
 		printf ("✅ ]\n\n");
 	else
 		printf("❌ ]\n\n");
+	
 }
+
+void test_ft_write_file(const void *buf, unsigned int count, char *number)
+{
+	int fd;
+
+	// write
+	fd = open("./test_srcs/test_write.c", O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	write(fd, buf, strlen(buf));
+	close(fd);
+
+	// ft_write
+	fd = open("./test_srcs/test_ft_write.c", O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	ft_write(fd, buf, strlen(buf));
+	close(fd);
+	printf("\n\t%s--- test %s  ---\n%s", C_NRML , number, C_NRML);
+	printf("\t%s[test string] : %s|%s|\n%s ", C_PRPL , C_YLLW , buf, C_NRML);
+	printf("%s\n\tresult:\t\t%scheck /test_srcs folder\n", C_GREN, C_YLLW);
+
+}
+
+void test_ft_read(int fd_read, int fd_ft_read, void *buf1, void *buf2,
+					unsigned int count, char *number)
+{
+	ssize_t _read;
+	ssize_t _ft_read;
+	int		_read_errno;
+	int		_ft_read_errno;
+
+	_read = read(fd_read, buf1, count);
+	_read_errno = errno;
+
+	_ft_read = ft_read(fd_ft_read, buf2, count);
+	_ft_read_errno = errno;
+
+	if (!buf1)
+		buf1 = "NULL";
+	if (!buf2)
+		buf2 = "NULL";
+
+	printf("\n\t%s--- test %s  ---\n", C_NRML , number);
+	printf("\t%sread       ret: %s|%zd|", C_AQUA , C_YLLW , _read);
+	printf("%s\n\tft_read    ret: %s|%zd|", C_AQUA, C_YLLW , _ft_read);
+	printf("\n\t%sread       buf: %s|%s|", C_AQUA , C_YLLW , buf1);
+	printf("%s\n\tft_read    buf: %s|%s|", C_AQUA, C_YLLW , buf2);
+	printf("\n\t%sread     errno: |%d|", C_NRML , _read_errno);
+	printf("\n\tft_read  errno: |%d|\n", _ft_read_errno);
+	printf("%s\n\tresult:\t\t%s[", C_GREN, C_YLLW);
+
+	if ((_read_errno == _ft_read_errno) && !strcmp(buf1, buf2))
+		printf ("✅ ]\n\n");
+	else
+		printf("❌ ]\n\n");
+}
+
 int main()
 {
-	char dst_cyp[300];
+	char	dst_strcpy[300];
+	char	buf_read[100];
+	char	buf_ft_read[100];
+	int		fd_read;
+	int		fd_ft_read;
 
     printf("\nLibasm Testing ...");
 
@@ -130,10 +218,10 @@ int main()
 	test_ft_strlen("    ", no4);
 
 	printf("\n\n\n%s< %sft_strcpy.s test %s> :\n\n\n", C_NRML, C_RED, C_NRML);
-	test_ft_strcpy(dst_cyp, "hello", no1); 
-	test_ft_strcpy(dst_cyp, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", no2);
-	test_ft_strcpy(dst_cyp, "", no3);
-	test_ft_strcpy(dst_cyp, "    ", no4);
+	test_ft_strcpy(dst_strcpy, "hello", no1); 
+	test_ft_strcpy(dst_strcpy, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", no2);
+	test_ft_strcpy(dst_strcpy, "", no3);
+	test_ft_strcpy(dst_strcpy, "    ", no4);
 
 	printf("\n\n\n%s< %sft_strcmp.s test %s> :\n\n\n", C_NRML, C_RED, C_NRML);
 	test_ft_strcmp("same case", "same case", no1); 
@@ -152,15 +240,91 @@ int main()
 	test_ft_strdup("    ", no6);
 	test_ft_strdup("hi my name is gihwan-kim", no7);
 
+	printf("\n\n\n%s< %sft_write.s test %s> :\n\n\n", C_NRML, C_RED, C_NRML);
+	test_ft_write(1, "same case", strlen("same case"), no1); 
+	test_ft_write(1, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", 10 ,no2);
+	test_ft_write(1, "", 0, no3);
+	test_ft_write(1, "", 4, no4);
+	test_ft_write(1, " ", strlen(" ") ,no5);
+	test_ft_write(1, "    ", strlen("    "), no6);
+	test_ft_write(1, "hi my name is gihwan-kim", strlen("hi my name is gihwan"), no7);
+
+	test_ft_write(1, NULL, 5, no8);
+	test_ft_write(30, "same case", strlen("same case"), no9);
+	test_ft_write(20, "same case", strlen("same case"), no10);
+	test_ft_write(-1, "same case", strlen("same case"), "11");
+	// open(fd, 파일 열떄 옵션 , 파일 권한)
+	test_ft_write_file("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", \
+						strlen("Lorem ipsum dolor sit amet, consectetur adipiscing elit."), "12");
+
 
 	printf("\n\n\n%s< %sft_write.s test %s> :\n\n\n", C_NRML, C_RED, C_NRML);
-	test_ft_write(1, "same case", no1); 
-	test_ft_write(1, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", no2);
-	test_ft_write(1, "", no3);
-	test_ft_write(1, "", no4);
-	test_ft_write(1, " ", no5);
-	test_ft_write(1, "    ", no6);
-	test_ft_write(1, "hi my name is gihwan-kim", no7);
+
+	fd_read = open("./test_srcs/test_read_1.c", O_RDONLY);
+	fd_ft_read = open("./test_srcs/test_ft_read_1.c", O_RDONLY);
+	test_ft_read(fd_read, fd_ft_read, buf_read, buf_ft_read, 20, no1);
+	close(fd_read);
+	close(fd_ft_read);
+	memset(buf_read, 0, 100);
+	memset(buf_ft_read, 0, 100);
+
+	fd_read = open("./test_srcs/test_read_2.c", O_RDONLY);
+	fd_ft_read = open("./test_srcs/test_ft_read_2.c", O_RDONLY);
+	test_ft_read(fd_read, fd_ft_read, buf_read, buf_ft_read, 30, no2);
+	close(fd_read);
+	close(fd_ft_read);
+	memset(buf_read, 0, 100);
+	memset(buf_ft_read, 0, 100);
+
+	fd_read = open("./test_srcs/test_read_3.c", O_RDONLY);
+	fd_ft_read = open("./test_srcs/test_ft_read_3.c", O_RDONLY);
+	test_ft_read(fd_read, fd_ft_read, buf_read, buf_ft_read, 99, no3);
+	close(fd_read);
+	close(fd_ft_read);
+	memset(buf_read, 0, 100);
+	memset(buf_ft_read, 0, 100);
+
+	fd_read = open("./test_srcs/test_read_4.c", O_RDONLY);
+	fd_ft_read = open("./test_srcs/test_ft_read_4.c", O_RDONLY);
+	test_ft_read(fd_read, fd_ft_read, buf_read, buf_ft_read, 0, no4);
+	close(fd_read);
+	close(fd_ft_read);
+	memset(buf_read, 0, 100);
+	memset(buf_ft_read, 0, 100);
+	
+	fd_read = open("./test_srcs/test_read_5.c", O_RDONLY);
+	fd_ft_read = open("./test_srcs/test_ft_read_5.c", O_RDONLY);
+	test_ft_read(fd_read, fd_ft_read, buf_read, buf_ft_read, 50, no5);
+	close(fd_read);
+	close(fd_ft_read);
+	memset(buf_read, 0, 100);
+	memset(buf_ft_read, 0, 100);
+
+	fd_read = open("./test_srcs/test_read_6.c", O_RDONLY);
+	fd_ft_read = open("./test_srcs/test_ft_read_6.c", O_RDONLY);
+	test_ft_read(fd_read, fd_ft_read, NULL, NULL, 10, no6);
+	close(fd_read);
+	close(fd_ft_read);
+	memset(buf_read, 0, 100);
+	memset(buf_ft_read, 0, 100);
+
+	fd_read = open("./test_srcs/test_read_7.c", O_RDONLY);
+	fd_ft_read = open("./test_srcs/test_ft_read_7.c", O_RDONLY);
+	test_ft_read(fd_read, fd_ft_read, buf_read, buf_ft_read, 70, no7);
+	close(fd_read);
+	close(fd_ft_read);
+	memset(buf_read, 0, 100);
+	memset(buf_ft_read, 0, 100);
+
+
+	fd_read = open("./test_srcs/test_read_7.c", O_RDONLY);
+	fd_ft_read = open("./test_srcs/test_ft_read_7.c", O_RDONLY);
+	test_ft_read(fd_read, fd_ft_read, buf_read, buf_ft_read, -1, no8);
+	close(fd_read);
+	close(fd_ft_read);
+	memset(buf_read, 0, 100);
+	memset(buf_ft_read, 0, 100);
+
 
     return (0);
 }
